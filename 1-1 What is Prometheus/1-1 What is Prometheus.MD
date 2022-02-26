@@ -13,7 +13,7 @@
 - Version: 2.33.3  
 
 
-# Why we need Prometheus?
+# Why do we need Prometheus?
 - Cloud
     - Private Cloud
     - Public Cloud

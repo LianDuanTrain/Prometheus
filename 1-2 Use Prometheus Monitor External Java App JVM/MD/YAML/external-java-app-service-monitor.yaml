@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pure-java-app
+  labels:
+    app: java-app-metrics-9999 
+  namespace: app   
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: http-metrics
+    port: 9999
+    targetPort: 9999
+    protocol: TCP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: pure-java-app
+  labels:
+    app: java-app-metrics-9999 
+  namespace: app   
+subsets:
+- addresses:
+  - ip: 192.168.38.20
+  ports:
+  - name: http-metrics
+    port: 9999
+    protocol: TCP
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: pure-java-app
+    release: lian-training
+#    operated-prometheus: "true"
+  name: pure-java-app-monitor
+  namespace: prometheus
+spec:
+  endpoints:
+    - interval: 30s
+      port: http-metrics  
+  selector:
+    matchLabels:  
+      app: java-app-metrics-9999    
+  namespaceSelector:
+    matchNames:
+    - app
+
+    

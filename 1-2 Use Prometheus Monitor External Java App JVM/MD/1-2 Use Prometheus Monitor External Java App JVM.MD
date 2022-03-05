@@ -1,16 +1,16 @@
-# Use Prometheus Monitor External Java App's JVM
+# Use Prometheus Monitor External Java App JVM
 ## Topics
 - Environment Setup   
 - What is Prometheus Operator?   
 - What is ServiceMonitor?
-- Create a ServiceMonitor to Monitor External Java App
+- Create a ServiceMonitor to Monitor External Java App JVM
 - Verify External Java App JVM Metrics in Prometheus UI
 
 ## Environment Setup
 - [How to Add JAVA OPTS in Docker? | Java App Docker Image | Configure JAVA_OPTS in JAVA Docker Image](https://youtu.be/kAKtfh0u4xg)   
   -'docker run -e JAVA_OPTS='-javaagent:/jmx_prometheus_javaagent-0.16.1.jar=9999:/config.yaml'  --rm -d -p 9999:9999  lianduantraining/log-generator-jmx-exporter:v1' 
 - [Use Helm 3 to Install Prometheus Stack on Minikube in 10 Mins](https://youtu.be/wfxu053rbbI)   
-  - 'helm install prometheus prometheus-community/kube-prometheus-stack --namespace=prometheus --create-namespace --wait --version 33.0.0' 
+  - 'helm install lian-training prometheus-community/kube-prometheus-stack --namespace=prometheus --create-namespace --wait --version 33.0.0' 
   - 'helm list -n prometheus'
     
 
@@ -30,7 +30,7 @@ kubectl get prometheus -n prometheus lian-training-kube-prometh-prometheus -o ya
 ```
 
 
-## Create a ServiceMonitor to Monitor External Java App
+## Create a ServiceMonitor to Monitor External Java App JVM
 - 'kubectl create -f  external-java-app-service-monitor.yaml'  
 <img src='Prometheus.gif' > 
 

@@ -46,3 +46,9 @@ kubectl get prometheus -n prometheus lian-training-kube-prometh-prometheus -o ya
 - ServiceMonitor
 - Demo Monitor External Java App via ServiceMonitor in Prometheus
 - Verify External Java App JVM Metrics in Prometheus UI
+
+<h7>
+Icons are from 
+https://github.com/prometheus-operator/prometheus-operator
+https://www.docker.com/company/newsroom/media-resources
+</h7>

@@ -1,0 +1,10 @@
+groups:
+  - name: SiteDown
+    rules:
+    - alert: 'Log-Java-App Offline Alert'
+      expr: up{instance="log-generator-jmx-exporter:9999",job="java-app-jvm"} == 0
+      for: 5s
+      annotations:
+        summary: "Log-java-app Offline : {{.instance}}"
+        description: "Log-java-app Offline  : {{.instance}}"
+        custom: "java-app-jvm"

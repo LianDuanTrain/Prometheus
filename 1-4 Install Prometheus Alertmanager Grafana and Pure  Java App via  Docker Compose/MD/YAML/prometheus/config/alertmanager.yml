@@ -1,0 +1,41 @@
+global:
+  resolve_timeout: 1m
+  # The smarthost and SMTP sender used for mail notifications.
+  #smtp_smarthost: ''
+  #smtp_from: ''
+  #smtp_auth_username: ''
+  #smtp_auth_password: ''
+
+route:
+  receiver: 'gmail-receiver'
+    # The labels by which incoming alerts are grouped together. For example,
+  # multiple alerts coming in for cluster=A and alertname=LatencyHigh would
+  # be batched into a single group.
+  #group_by: ['alertname']
+
+  # When a new group of alerts is created by an incoming alert, wait at
+  # least 'group_wait' to send the initial notification.
+  # This way ensures that you get multiple alerts for the same group that start
+  # firing shortly after another are batched together on the first
+  # notification.
+  # group_wait: 5s
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  # group_interval: 30s
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to
+  # resend them.
+  repeat_interval: 1m
+receivers:
+- name: gmail-receiver
+  email_configs:
+  - to: lian.duan.training@gmail.com
+    from: lian.duan.training@gmail.com
+    smarthost: smtp.gmail.com:587
+    auth_username: lian.duan.training@gmail.com
+    auth_identity: lian.duan.training@gmail.com
+    auth_password: XXX
+
+#receivers:
+#  - name: 'default-receiver'

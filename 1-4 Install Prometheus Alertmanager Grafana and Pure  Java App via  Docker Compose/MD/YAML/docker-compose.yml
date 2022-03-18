@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+# prometheus service
+  prometheus:
+   # Run Container as root user
+    user: root
+    image: prom/prometheus:v2.33.5
+    container_name: prometheus
+    hostname: localhost
+    restart: always
+    ports:
+      - '9090:9090'
+   # Mount config file from local to Container
+    volumes:
+      - './prometheus/config:/config'
+      - './prometheus/data/prometheus:/prometheus/data'
+   # Container start CMD to load config file   
+    command:
+      - '--config.file=/config/prometheus.yml'
+      - '--web.enable-lifecycle'
+    networks:
+            - prometheus
+  alertmanager:
+    # Run Container as root user
+    user: root
+    image: prom/alertmanager:v0.23.0
+    container_name: alertmanager
+    hostname: localhost
+    restart: always
+    ports:
+      - '9093:9093'
+   # Mount config file from local to Container  
+    volumes:
+      - './prometheus/config:/config'
+      - './prometheus/data/alertmanager:/alertmanager/data'
+   # Container start CMD to load config file   
+    command:
+      - '--config.file=/config/alertmanager.yml'
+    networks:
+      - prometheus
+  grafana:
+     # Run Container as root user
+    user: root
+    image: grafana/grafana:8.4.3
+    container_name: grafana
+    hostname: localhost
+    restart: always
+    ports:
+      - '3000:3000'
+   # Mount config file from local to Container     
+    volumes:
+      - './grafana/config/grafana.ini:/etc/grafana/grafana.ini'
+      - './grafana/data/grafana:/var/lib/grafana'
+    networks:
+      - prometheus
+  log-generator-jmx-exporter:
+    restart: always
+    environment:
+      - 'JAVA_OPTS=-javaagent:/jmx_prometheus_javaagent-0.16.1.jar=9999:/config.yaml'
+    ports:
+      - '9999:9999'
+    image: 'lianduantraining/log-generator-jmx-exporter:v1'
+    networks:
+      - prometheus
+networks:
+  prometheus:
+    name: prometheus           

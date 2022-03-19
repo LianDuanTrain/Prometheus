@@ -22,7 +22,7 @@
 - Grafana: 8.4.3
   
 ## System Overview 
-<image src="system.gif" width="90%">
+<image src="system.gif" >
 
 ## Use Docker Compose to Install Prometheus, Alertmanager, Grafana, and Pure Java App 
 - File Structure 

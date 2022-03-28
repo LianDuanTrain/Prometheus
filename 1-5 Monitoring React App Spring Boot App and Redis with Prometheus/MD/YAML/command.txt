@@ -1,0 +1,11 @@
+docker build -t lianduantraining/react-app:v3 .
+docker push lianduantraining/react-app:v3
+
+
+docker build -t lianduantraining/springbootdemo:v6 .
+
+docker push lianduantraining/springbootdemo:v6
+
+
+ docker-compose up -d
+ docker-compose down

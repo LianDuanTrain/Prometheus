@@ -1,0 +1,24 @@
+groups:
+  - name: SiteDown
+    rules:
+    - alert: 'Redis Offline Alert'
+      expr: redis_up{instance="redis-prometheus-exporter:9121", job="redis-prometheus-exporter"} == 0
+      for: 5s
+      annotations:
+        summary: "Redis Offline : {{.instance}}"
+        description: "Redis Offline  : {{.instance}}"
+        custom: "Lian's Training"
+    - alert: 'Spring Boot Microservices Offline Alert'
+      expr: up{instance="springBoot:9999", job="springBoot-prometheus-exporter"} == 0
+      for: 5s
+      annotations:
+        summary: "Spring Boot Microservices Offline : {{.instance}}"
+        description: "Spring Boot Microservices Offline  : {{.instance}}"
+        custom: "Lian's Training"   
+    - alert: 'React UI Offline Alert'
+      expr: nginx_up{instance="nginx-prometheus-exporter:9113", job="nginx-prometheus-exporter"} == 0
+      for: 5s
+      annotations:
+        summary: "React UI Offline : {{.instance}}"
+        description: "React UI Offline  : {{.instance}}"
+        custom: "Lian's Training" 

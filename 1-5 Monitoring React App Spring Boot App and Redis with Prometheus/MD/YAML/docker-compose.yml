@@ -1,0 +1,122 @@
+version: '3.8'
+services:
+# React UI service
+  reactUI:
+    image: lianduantraining/react-app:v3
+    container_name: reactUI
+    hostname: localhost
+    healthcheck:
+      test: ["CMD", "curl", "-f", "reactUI:8080"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    ports:
+      - '8080:8080'
+    networks:
+      - prometheus
+# SpringBoot Microservices
+  springBoot:
+    image: lianduantraining/springbootdemo:v6
+    container_name: springBoot
+    hostname: localhost
+    ports:
+      - '9999:9999'
+    networks:
+      - prometheus
+# DB Service      
+  redis:
+    container_name: redis
+    image: redis:6.2-alpine
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - redis:/data
+    networks:
+      - prometheus
+# Nginx Prometheus Exporter    
+  nginx-prometheus-exporter:
+    container_name: nginx-prometheus-exporter
+    ports:
+            - '9113:9113'
+    image: 'nginx/nginx-prometheus-exporter:0.10.0'
+    depends_on:   
+      reactUI:
+       condition: service_healthy
+    command:
+    - -nginx.scrape-uri
+    - http://reactUI:8080/stub_status      
+    networks:
+      - prometheus
+# Redis Exporter
+  redis-prometheus-exporter:
+      container_name: redis-prometheus-exporter
+      image: oliver006/redis_exporter:v1.37.0
+      command: -redis.addr redis://redis:6379
+      ports:
+       - 9121:9121
+      networks:
+       - prometheus
+
+
+# prometheus service
+  prometheus:
+   # Run Container as root user
+    user: root
+    image: prom/prometheus:v2.33.5
+    container_name: prometheus
+    hostname: localhost
+    restart: always
+    ports:
+      - '9090:9090'
+   # Mount config file from local to Container
+    volumes:
+      - './prometheus/config:/config'
+      - './prometheus/data/prometheus:/prometheus/data'
+   # Container start CMD to load config file   
+    command:
+      - '--config.file=/config/prometheus.yml'
+      - '--web.enable-lifecycle'
+    networks:
+            - prometheus
+  alertmanager:
+    # Run Container as root user
+    user: root
+    image: prom/alertmanager:v0.23.0
+    container_name: alertmanager
+    hostname: localhost
+    restart: always
+    ports:
+      - '9093:9093'
+   # Mount config file from local to Container  
+    volumes:
+      - './prometheus/config:/config'
+      - './prometheus/data/alertmanager:/alertmanager/data'
+   # Container start CMD to load config file   
+    command:
+      - '--config.file=/config/alertmanager.yml'
+    networks:
+      - prometheus
+  grafana:
+     # Run Container as root user
+    user: root
+    image: grafana/grafana:8.4.3
+    container_name: grafana
+    hostname: localhost
+    restart: always
+    ports:
+      - '3000:3000'
+   # Mount config file from local to Container     
+    volumes:
+      - './grafana/config/grafana.ini:/etc/grafana/grafana.ini'
+      - './grafana/data/grafana:/var/lib/grafana'
+    networks:
+      - prometheus
+
+volumes:
+  redis:
+    driver: local
+
+networks:
+  prometheus:
+    name: prometheus           

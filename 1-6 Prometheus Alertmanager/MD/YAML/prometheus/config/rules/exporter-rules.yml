@@ -1,0 +1,17 @@
+groups:
+  - name: Exporter Down
+    rules:
+    - alert: 'Redis Prometheus Exporter Offline Alert'
+      expr: up{instance="redis-prometheus-exporter:9121", job="redis-prometheus-exporter"} == 0
+      for: 5s
+      annotations:
+        summary: "Redis Prometheus Exporter Offline : {{.instance}}"
+        description: "Redis Prometheus Exporter Offline  : {{.instance}}"
+        custom: "Lian's Training"
+    - alert: 'Nginx Prometheus Exporter Offline Alert'
+      expr: up{instance="nginx-prometheus-exporter:9113", job="nginx-prometheus-exporter"} == 0
+      for: 5s
+      annotations:
+        summary: "Nginx Prometheus Exporter Offline : {{.instance}}"
+        description: "Nginx Prometheus Exporter Offline  : {{.instance}}"
+        custom: "Lian's Training" 

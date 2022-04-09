@@ -1,0 +1,52 @@
+global:
+  #  [ scrape_interval: <duration> | default = 1m ]
+  scrape_interval:  3m 
+  #  [ scrape_timeout: <duration> | default = 10s ]
+  scrape_timeout:  30s 
+  #  [ evaluation_interval: <duration> | default = 1m ]
+  evaluation_interval: 2m 
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'lian-training-monitor'
+
+rule_files:
+  - "rules/*.yml"
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "alertmanager:9093"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label \`job=<job_name>\` to any timeseries scraped from this config.
+  - job_name: 'redis-prometheus-exporter'
+    static_configs:
+      - targets: ['redis-prometheus-exporter:9121']
+        labels:
+          app: DBLayer
+          severity: critical
+          server: backEnd
+          exporter: redis
+  - job_name: 'nginx-prometheus-exporter'
+    static_configs:
+      - targets: ['nginx-prometheus-exporter:9113'] 
+        labels:
+          app: UILayer
+          severity: warm 
+          server: frontEnd  
+          exporter: nginx
+  - job_name: 'springBoot-prometheus-exporter'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['springBoot:9999']  
+        labels:
+          app: MicroserviceLayer 
+          severity: critical 
+          server: backEnd 
+          exporter: springBoot  

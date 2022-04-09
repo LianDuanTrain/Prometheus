@@ -35,7 +35,7 @@ receivers:
     smarthost: smtp.gmail.com:587
     auth_username: lian.duan.training@gmail.com
     auth_identity: lian.duan.training@gmail.com
-    auth_password: bdskhyfabxjqusff
+    auth_password: XXXXXX
 
 #receivers:
 #  - name: 'default-receiver'
